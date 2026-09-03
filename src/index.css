@@ -1,0 +1,28 @@
+:root { color-scheme: light dark; }
+
+* { -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;                 /* the app manages its own scrolling */
+  overscroll-behavior: none;        /* no rubber-band bounce on Android */
+  background: #F7F5F1;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+  html, body { background: #100E0D; }
+}
+
+#root { height: 100%; }
+
+/* Text selection is deliberate here: allow it in inputs, not on chrome */
+body { user-select: none; -webkit-user-select: none; }
+input, textarea { user-select: text; -webkit-user-select: text; }
+
+/* --- Device safe areas -------------------------------------------- */
+/* The app's own stylesheet handles the status bar and gesture areas,  */
+/* so nothing extra is needed here. Keep the background matched to the */
+/* app's paper tone so there is no flash on launch.                    */
