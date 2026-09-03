@@ -62,7 +62,7 @@ const CSS = `
 
 /* paper grain — the whole app sits on textured stock */
 .grain {
-  position:absolute; inset:0; z-index:12; pointer-events:none; opacity:.5; mix-blend-mode:multiply;
+  position:absolute; inset:0; z-index:33; pointer-events:none; opacity:.5; mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='.38'/></svg>");
 }
 .nf.dark .grain { mix-blend-mode:screen; opacity:.22; }
@@ -76,10 +76,11 @@ const CSS = `
 .navbar.solid { background:var(--bar); backdrop-filter:saturate(180%) blur(22px); -webkit-backdrop-filter:saturate(180%) blur(22px); box-shadow:0 .5px 0 var(--sep); }
 .navtitle { flex:1; text-align:center; font-family:var(--display); font-size:16px; font-weight:700; opacity:0; transition:opacity .25s; letter-spacing:-.02em; }
 .navbar.solid .navtitle { opacity:1; }
-.navbtn { min-width:38px; height:38px; padding:0 8px; border-radius:19px; display:grid; place-items:center; color:var(--accent); }
+/* flex, not grid — a back button holds a chevron AND a word, side by side */
+.navbtn { min-width:38px; height:38px; padding:0 6px; border-radius:19px; display:inline-flex; align-items:center; justify-content:center; gap:1px; white-space:nowrap; color:var(--accent); flex:none; }
 .navbtn:active { opacity:.4; }
 .navbar.overhero .navbtn, .navbar.overhero .navtitle { color:#fff; }
-.navtext { font-size:16px; color:var(--accent); display:inline-flex; align-items:center; gap:2px; }
+.navtext { font-size:16px; line-height:1; color:var(--accent); display:inline-flex; align-items:center; }
 .navtext.bold { font-weight:600; }
 
 .scroll { flex:1; overflow-y:auto; overscroll-behavior:contain; padding:calc(52px + env(safe-area-inset-top,0px)) 0 128px; }
@@ -250,19 +251,38 @@ const CSS = `
   box-shadow:inset 0 0 0 .5px var(--sep);
 }
 .avatar img { width:100%; height:100%; object-fit:cover; display:block; }
-.profilehead { display:flex; flex-direction:column; align-items:center; padding:10px 0 6px; }
-.avatarwrap { position:relative; padding:0; border-radius:50%; transition:transform .18s cubic-bezier(.3,1.4,.5,1); }
-.avatarwrap:active { transform:scale(.94); }
-.avatarwrap .avatar { box-shadow:0 10px 26px -12px rgba(40,30,20,.5), inset 0 0 0 .5px var(--sep); }
-.camerabadge {
-  position:absolute; right:0; bottom:2px; width:32px; height:32px; border-radius:16px; background:var(--accent);
-  color:#fff; display:grid; place-items:center; border:3px solid var(--bg);
+.profilebanner {
+  position:relative; margin:4px 18px 0; padding:26px 20px 24px; border-radius:24px; text-align:center;
+  color:#fff; overflow:hidden;
 }
-.removephoto { margin-top:12px; font-size:14px; font-weight:600; color:var(--red); padding:6px 12px; }
+.profilebanner::after {
+  content:""; position:absolute; left:-25%; top:-70%; width:150%; height:150%; border-radius:50%;
+  background:radial-gradient(closest-side, rgba(255,255,255,.28), rgba(255,255,255,0)); pointer-events:none;
+}
+.profilebanner .nm { position:relative; font-family:var(--display); font-size:23px; font-weight:800; letter-spacing:-.035em; margin-top:15px; }
+.profilebanner .since { position:relative; font-size:13px; opacity:.86; margin-top:5px; }
+.avatarwrap { position:relative; display:inline-block; padding:0; border-radius:50%; transition:transform .18s cubic-bezier(.3,1.4,.5,1); }
+.avatarwrap:active { transform:scale(.94); }
+.profilebanner .avatar { background:rgba(255,255,255,.2); color:#fff; box-shadow:0 0 0 4px rgba(255,255,255,.24), 0 12px 28px -12px rgba(0,0,0,.5); }
+.camerabadge {
+  position:absolute; right:0; bottom:2px; width:34px; height:34px; border-radius:17px; background:#fff;
+  color:var(--label); display:grid; place-items:center; box-shadow:0 4px 12px rgba(0,0,0,.28);
+}
+.removephoto { position:relative; margin-top:14px; font-size:13.5px; font-weight:600; color:#fff; padding:7px 15px; border-radius:13px; background:rgba(255,255,255,.2); }
 .removephoto:active { opacity:.6; }
+
+.statgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 18px; }
+.statcard {
+  background:var(--card); border-radius:18px; padding:15px 15px 14px; display:flex; flex-direction:column;
+  box-shadow:0 1px 2px rgba(40,30,20,.05),0 8px 20px -14px rgba(40,30,20,.2);
+}
+.nf.dark .statcard { box-shadow:none; }
+.statcard b { display:block; font-family:var(--round); font-size:28px; font-weight:800; letter-spacing:-.045em; line-height:1.1; margin-top:11px; }
+.statcard span { font-size:12.5px; color:var(--label-2); margin-top:3px; line-height:1.3; }
 
 /* ---------- attachments ---------- */
 .attbar { display:flex; gap:8px; }
+.attbusy { font-size:12.5px; color:var(--label-2); margin-top:10px; }
 .attbtn {
   flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:11px 8px;
   border-radius:14px; background:var(--card); color:var(--label); font-size:13.5px; font-weight:600;
@@ -454,7 +474,7 @@ const dueLabel = (k) => {
   return fromKey(k).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 };
 const relTime = (ts) => {
-  const m = Math.floor((Date.now() - ts) / 60000);
+  const m = Math.max(0, Math.floor((Date.now() - ts) / 60000));
   if (m < 1) return "Just now";
   if (m < 60) return `${m} min ago`;
   if (m < 1440) return new Date(ts).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
@@ -575,6 +595,25 @@ function downloadICS(tasks) {
   return scheduled.length;
 }
 
+
+/* A note's display title: what you typed, else its opening line. */
+const noteTitle = (n) => {
+  if (n.title?.trim()) return n.title.trim();
+  const first = (n.body || "").trim().split("\n")[0].trim();
+  if (first) return first.slice(0, 60);
+  const atts = (n.attachments || []).length;
+  if (atts) return `${atts} ${atts === 1 ? "attachment" : "attachments"}`;
+  if ((n.checklist || []).length) return "Checklist";
+  return "New Note";
+};
+/* ...and the preview beneath it, minus whatever became the title. */
+const notePreview = (n) => {
+  const body = (n.body || "").trim();
+  if (n.title?.trim()) return body;
+  const nl = body.indexOf("\n");
+  return nl === -1 ? "" : body.slice(nl + 1).trim();
+};
+
 const streakOf = (journal) => {
   let n = 0, k = TODAY();
   if (!journal[k]) k = shift(k, -1);
@@ -620,6 +659,7 @@ const blank = () => ({ notes: [], tasks: [], journal: {}, prefs: { dark: false, 
 
 function useStore() {
   const [data, setData] = useState(null);
+  const [saveFailed, setSaveFailed] = useState(0);
   const dirty = useRef(false);
   useEffect(() => {
     let alive = true;
@@ -633,12 +673,13 @@ function useStore() {
   useEffect(() => {
     if (!data || !dirty.current) return;
     const id = setTimeout(async () => {
-      try { await window.storage.set(KEY, JSON.stringify(data)); } catch (e) { console.error("NoteFlow couldn't save", e); }
+      try { await window.storage.set(KEY, JSON.stringify(data)); }
+      catch (e) { console.error("NoteFlow couldn't save", e); setSaveFailed((n) => n + 1); }
     }, 400);
     return () => clearTimeout(id);
   }, [data]);
   const update = useCallback((fn) => { dirty.current = true; setData((d) => fn(d)); }, []);
-  return { data, update };
+  return { data, update, saveFailed };
 }
 
 /* ══════════════════════════════════════════════════════════════════ */
@@ -752,7 +793,10 @@ const shrinkImage = (file, max = 1400, quality = 0.72) => new Promise((res, rej)
     const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
     const c = document.createElement("canvas");
     c.width = w; c.height = h;
-    c.getContext("2d").drawImage(img, 0, 0, w, h);
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#FFFFFF";      // JPEG has no alpha; without this, transparency turns black
+    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(img, 0, 0, w, h);
     URL.revokeObjectURL(url);
     res({ dataUrl: c.toDataURL("image/jpeg", quality), w, h });
   };
@@ -849,11 +893,16 @@ function Thumb({ att, onOpen, onRemove }) {
 
 function Attachments({ items = [], onAdd, onRemove, toast }) {
   const [viewing, setViewing] = useState(null);
+  const [busy, setBusy] = useState(false);
   const images = items.filter((a) => a.kind === "image");
   const docs = items.filter((a) => a.kind !== "image");
   return (
     <>
-      <AttachButtons onPicked={async (files) => onAdd(await ingest(files, toast))} />
+      <AttachButtons onPicked={async (files) => {
+        setBusy(true);
+        try { onAdd(await ingest(files, toast)); } finally { setBusy(false); }
+      }} />
+      {busy && <p className="attbusy">Processing…</p>}
       {images.length > 0 && (
         <div className="thumbs">
           {images.map((a) => <Thumb key={a.id} att={a} onOpen={(att, src) => setViewing({ att, src })} onRemove={onRemove} />)}
@@ -945,6 +994,7 @@ function TaskItem({ task, onToggle, onOpen, showDate }) {
 function NoteCard({ note, onOpen, dark, i = 0 }) {
   const items = note.checklist || [];
   const atts = note.attachments || [];
+  const preview = notePreview(note);
   const done = items.filter((c) => c.done).length;
   return (
     <button className="ncard pop" style={{ background: tintBg(note.tint, dark), animationDelay: `${Math.min(i, 8) * 45}ms` }} onClick={() => onOpen(note)}>
@@ -952,8 +1002,8 @@ function NoteCard({ note, onOpen, dark, i = 0 }) {
         <span className="em">{note.emoji || "📝"}</span>
         {note.pinned && <Pin size={12} color="var(--label-3)" fill="currentColor" style={{ marginLeft: "auto" }} />}
       </div>
-      <h3>{note.title || (atts.length ? `${atts.length} ${atts.length === 1 ? "attachment" : "attachments"}` : "New Note")}</h3>
-      {note.body && <p>{note.body.slice(0, 96)}{note.body.length > 96 ? "…" : ""}</p>}
+      <h3>{noteTitle(note)}</h3>
+      {preview && <p>{preview.slice(0, 96)}{preview.length > 96 ? "…" : ""}</p>}
       {items.length > 0 && (
         <div className="cl">
           {items.slice(0, 2).map((c) => (
@@ -1053,6 +1103,14 @@ function Today({ data, update, go, openNote, openJournal, voice, toast }) {
       {pending.length > 0 ? (
         <Group title="Tasks" action="See All" onAction={() => go("planner")}>
           {pending.slice(0, 5).map((x) => <TaskItem key={x.id} task={x} onToggle={toggle} showDate={x.due < t} />)}
+          {pending.length > 5 && (
+            <button className="item" onClick={() => go("planner")}>
+              <div className="grow" style={{ color: "var(--accent)", fontSize: 15, fontWeight: 600 }}>
+                {pending.length - 5} more {pending.length - 5 === 1 ? "task" : "tasks"}
+              </div>
+              <ChevronRight size={16} className="chev" />
+            </button>
+          )}
         </Group>
       ) : (
         <Group title="Tasks" action="See All" onAction={() => go("planner")}>
@@ -1422,23 +1480,30 @@ function Journal({ data, openJournal }) {
 function NoteEditor({ note, dark, voice, onSave, onDelete, onClose, toast, confirm }) {
   const [n, setN] = useState(note);
   const [showOpts, setShowOpts] = useState(false);
-  const set = (p) => setN((x) => ({ ...x, ...p }));
+  const dirty = useRef(false);
+  const finished = useRef(false);
+  const latest = useRef(n);
+  latest.current = n;
+  const set = (p) => { dirty.current = true; setN((x) => ({ ...x, ...p })); };
   const ref = useRef(null);
   useEffect(() => { if (!note.title && !note.body) setTimeout(() => ref.current?.focus(), 340); }, []);
 
-  const isEmpty = !n.title.trim() && !n.body.trim() && !(n.checklist || []).some((c) => c.text.trim()) && !(n.attachments || []).length;
-  const commit = () => {
-    voice.stop();
-    if (isEmpty) { onDelete(n.id, true); onClose(); return; }
-    onSave({ ...n, title: n.title.trim(), checklist: (n.checklist || []).filter((c) => c.text.trim()), tags: [...new Set([...(n.tags || []), ...parseTags(n.body + " " + n.title)])].slice(0, 6), updatedAt: Date.now() });
-    onClose();
+  const persist = () => {
+    const c = latest.current;
+    const empty = !c.title.trim() && !c.body.trim() && !(c.checklist || []).some((i) => i.text.trim()) && !(c.attachments || []).length;
+    if (empty) { onDelete(c.id, true); return; }
+    onSave({ ...c, title: c.title.trim(), checklist: (c.checklist || []).filter((i) => i.text.trim()), tags: [...new Set([...(c.tags || []), ...parseTags(c.body + " " + c.title)])].slice(0, 6), updatedAt: Date.now() });
   };
+  const commit = () => { voice.stop(); finished.current = true; persist(); onClose(); };
+
+  /* Dismissed by the hardware back button rather than Done — keep the work. */
+  useEffect(() => () => { if (!finished.current && dirty.current) persist(); }, []);
   const setCheck = (id, p) => set({ checklist: n.checklist.map((c) => c.id === id ? { ...c, ...p } : c) });
 
   return (
     <div className="cover" style={{ background: tintBg(n.tint, dark) }}>
       <div className="coverbar" style={{ background: "transparent", boxShadow: "none" }}>
-        <button className="navbtn" onClick={commit} aria-label="Back to Notes"><ChevronLeft size={22} strokeWidth={2.4} /><span className="navtext">Notes</span></button>
+        <button className="navbtn" onClick={commit} aria-label="Back to Notes"><ChevronLeft size={21} strokeWidth={2.6} style={{ marginRight: -1 }} /><span className="navtext">Notes</span></button>
         <div style={{ flex: 1 }} />
         <button className="navbtn" onClick={() => { tap(); set({ pinned: !n.pinned }); }} aria-label={n.pinned ? "Unpin note" : "Pin note"}>
           {n.pinned ? <Pin size={19} fill="currentColor" /> : <PinOff size={19} />}
@@ -1525,7 +1590,7 @@ function NoteEditor({ note, dark, voice, onSave, onDelete, onClose, toast, confi
                   <div className="sqico" style={{ background: "var(--label-3)" }}><Copy size={15} /></div>
                   <div className="grow"><div className="ttl">Copy Note</div></div>
                 </button>
-                <button className="item inset" onClick={() => { onSave({ ...n, archived: !n.archived, updatedAt: Date.now() }); setShowOpts(false); onClose(); toast(n.archived ? "Moved to Notes" : "Moved to Archive"); }}>
+                <button className="item inset" onClick={() => { finished.current = true; onSave({ ...n, archived: !n.archived, updatedAt: Date.now() }); setShowOpts(false); onClose(); toast(n.archived ? "Moved to Notes" : "Moved to Archive"); }}>
                   <div className="sqico" style={{ background: "var(--orange)" }}><Archive size={15} /></div>
                   <div className="grow"><div className="ttl">{n.archived ? "Unarchive" : "Archive"}</div></div>
                 </button>
@@ -1533,7 +1598,7 @@ function NoteEditor({ note, dark, voice, onSave, onDelete, onClose, toast, confi
                   setShowOpts(false);
                   confirm({
                     title: "Delete Note?", message: "This note will be removed. You can undo right after.",
-                    danger: "Delete", onConfirm: () => { onDelete(n.id); onClose(); },
+                    danger: "Delete", onConfirm: () => { finished.current = true; onDelete(n.id); onClose(); },
                   });
                 }}>
                   <div className="sqico" style={{ background: "var(--red)" }}><Trash2 size={15} /></div>
@@ -1558,15 +1623,31 @@ function NoteEditor({ note, dark, voice, onSave, onDelete, onClose, toast, confi
 function JournalEditor({ dateKey, entry, voice, onSave, onDelete, onClose, confirm, toast }) {
   const [e, setE] = useState(entry);
   const [showDetails, setShowDetails] = useState(!!(entry.mood || entry.energy || entry.weather));
-  const set = (p) => setE((x) => ({ ...x, ...p }));
+  const dirty = useRef(false);
+  const finished = useRef(false);
+  const latest = useRef(e);
+  latest.current = e;
+  const set = (p) => { dirty.current = true; setE((x) => ({ ...x, ...p })); };
   const area = useRef(null);
   useEffect(() => { setTimeout(() => area.current?.focus(), 430); }, []);
+
+  /* Back button instead of Done — a half-written entry is still worth keeping. */
+  useEffect(() => () => {
+    if (finished.current || !dirty.current) return;
+    const c = latest.current;
+    if (!c.body.trim() && !c.mood && !c.energy && !c.weather && !(c.attachments || []).length) {
+      if (c.exists) onDelete(dateKey);
+      return;
+    }
+    onSave(dateKey, { ...c, updatedAt: Date.now() });
+  }, []);
 
   const count = words(e.body);
   const dictating = voice.field === "journal";
 
   const save = () => {
     voice.stop();
+    finished.current = true;
     if (!e.body.trim() && !e.mood && !e.energy && !e.weather && !(e.attachments || []).length) {
       if (e.exists) onDelete(dateKey);
       onClose(); return;
@@ -1579,7 +1660,7 @@ function JournalEditor({ dateKey, entry, voice, onSave, onDelete, onClose, confi
   return (
     <div className="cover">
       <div className="coverbar">
-        <button className="navbtn" onClick={() => { voice.stop(); onClose(); }}><span className="navtext">Cancel</span></button>
+        <button className="navbtn" onClick={() => { voice.stop(); finished.current = true; onClose(); }}><span className="navtext">Cancel</span></button>
         <div style={{ flex: 1, textAlign: "center", fontFamily: "var(--display)", fontSize: 17, fontWeight: 600 }}>
           {dateKey === TODAY() ? "Today" : fmtMed(dateKey)}
         </div>
@@ -1656,7 +1737,7 @@ function JournalEditor({ dateKey, entry, voice, onSave, onDelete, onClose, confi
         {e.exists && (
           <div className="pad" style={{ marginTop: 26 }}>
             <button className="bigbtn wide quiet" style={{ color: "var(--red)" }}
-              onClick={() => confirm({ title: "Delete Entry?", message: "This journal entry will be removed permanently.", danger: "Delete", onConfirm: () => { onDelete(dateKey); onClose(); toast("Entry deleted"); } })}>
+              onClick={() => confirm({ title: "Delete Entry?", message: "This journal entry will be removed permanently.", danger: "Delete", onConfirm: () => { finished.current = true; onDelete(dateKey); onClose(); toast("Entry deleted"); } })}>
               Delete Entry
             </button>
           </div>
@@ -1684,19 +1765,31 @@ function JournalEditor({ dateKey, entry, voice, onSave, onDelete, onClose, confi
 
 function TaskEditor({ task, voice, onSave, onDelete, onClose, confirm, toast }) {
   const [t, setT] = useState(task);
-  const set = (p) => setT((x) => ({ ...x, ...p }));
+  const dirty = useRef(false);
+  const finished = useRef(false);
+  const latest = useRef(t);
+  latest.current = t;
+  const set = (p) => { dirty.current = true; setT((x) => ({ ...x, ...p })); };
   const ref = useRef(null);
   useEffect(() => { if (!task.title) setTimeout(() => ref.current?.focus(), 340); }, []);
   const save = () => {
     voice.stop();
+    finished.current = true;
     if (!t.title.trim()) { onClose(); return; }
     onSave({ ...t, title: t.title.trim() }); onClose(); toast(task.title ? "Task updated" : "Task added");
   };
 
+  /* Dismissed by back — keep it if it has a name. */
+  useEffect(() => () => {
+    if (finished.current || !dirty.current) return;
+    const c = latest.current;
+    if (c.title.trim()) onSave({ ...c, title: c.title.trim() });
+  }, []);
+
   return (
     <div className="cover">
       <div className="coverbar">
-        <button className="navbtn" onClick={() => { voice.stop(); onClose(); }}><span className="navtext">Cancel</span></button>
+        <button className="navbtn" onClick={() => { voice.stop(); finished.current = true; onClose(); }}><span className="navtext">Cancel</span></button>
         <div style={{ flex: 1, textAlign: "center", fontSize: 16, fontWeight: 600 }}>{task.title ? "Task" : "New Task"}</div>
         <button className="navbtn" onClick={save}><span className="navtext bold">Done</span></button>
       </div>
@@ -1753,7 +1846,7 @@ function TaskEditor({ task, voice, onSave, onDelete, onClose, confirm, toast }) 
         {task.title && (
           <div className="pad" style={{ marginTop: 22 }}>
             <button className="bigbtn wide quiet" style={{ color: "var(--red)" }}
-              onClick={() => confirm({ title: "Delete Task?", message: "This task will be removed. You can undo right after.", danger: "Delete", onConfirm: () => { onDelete(t.id); onClose(); } })}>
+              onClick={() => confirm({ title: "Delete Task?", message: "This task will be removed. You can undo right after.", danger: "Delete", onConfirm: () => { finished.current = true; onDelete(t.id); onClose(); } })}>
               Delete Task
             </button>
           </div>
@@ -1767,7 +1860,7 @@ function TaskEditor({ task, voice, onSave, onDelete, onClose, confirm, toast }) 
 /*  SEARCH, SETTINGS, CREATE, ONBOARDING                              */
 /* ══════════════════════════════════════════════════════════════════ */
 
-function SearchPage({ data, voice, onClose, openNote, openJournal, go }) {
+function SearchPage({ data, voice, onClose, openNote, openJournal, openTask, go }) {
   const [q, setQ] = useState("");
   const ref = useRef(null);
   useEffect(() => { setTimeout(() => ref.current?.focus(), 340); }, []);
@@ -1795,7 +1888,7 @@ function SearchPage({ data, voice, onClose, openNote, openJournal, go }) {
             {notes.map((n) => (
               <button className="item inset" key={n.id} onClick={() => { onClose(); openNote(n); }}>
                 <span style={{ fontSize: 19 }}>{n.emoji}</span>
-                <div className="grow"><div className="ttl">{n.title || "New Note"}</div><div className="sub">{n.body.slice(0, 60)}</div></div>
+                <div className="grow"><div className="ttl">{noteTitle(n)}</div><div className="sub">{(notePreview(n) || n.body).slice(0, 60)}</div></div>
                 <ChevronRight size={16} className="chev" />
               </button>
             ))}
@@ -1804,7 +1897,7 @@ function SearchPage({ data, voice, onClose, openNote, openJournal, go }) {
         {tasks.length > 0 && (
           <Group title="Tasks" right={`${tasks.length}`}>
             {tasks.map((t) => (
-              <button className="item inset" key={t.id} onClick={() => { onClose(); go("planner"); }}>
+              <button className="item inset" key={t.id} onClick={() => { onClose(); openTask(t); }}>
                 <i className="pdot" style={{ background: priOf(t.priority).v, width: 9, height: 9 }} />
                 <div className="grow"><div className="ttl">{t.title}</div><div className="sub">{t.done ? "Completed" : `${dueLabel(t.due)} · ${slotOf(t.slot).label}`}</div></div>
                 <ChevronRight size={16} className="chev" />
@@ -1835,6 +1928,15 @@ function ProfilePage({ data, update, onClose, confirm, toast }) {
   const notes = data.notes.filter((n) => !n.archived).length;
   const entries = Object.keys(data.journal).length;
   const done = data.tasks.filter((t) => t.done).length;
+  const streak = streakOf(data.journal);
+
+  /* Last seven days, so the page says something even on a quiet week. */
+  const weekAgo = Date.now() - 7 * 864e5;
+  const weekWords = Object.entries(data.journal)
+    .filter(([k]) => fromKey(k).getTime() >= weekAgo)
+    .reduce((n, [, e]) => n + words(entryText(e)), 0);
+  const weekNotes = data.notes.filter((n) => n.createdAt >= weekAgo).length;
+  const weekTasks = data.tasks.filter((t) => t.done && (t.doneAt || 0) >= weekAgo).length;
 
   const setProfile = (patch) => update((d) => ({ ...d, prefs: { ...d.prefs, profile: { ...profileOf(d), ...patch } } }));
 
@@ -1852,27 +1954,41 @@ function ProfilePage({ data, update, onClose, confirm, toast }) {
     } catch (err) { toast("Couldn't use that image"); }
   };
 
-  const save = () => { setProfile({ name: name.trim() }); onClose(); };
+  const finished = useRef(false);
+  const typed = useRef(name);
+  typed.current = name;
+  const save = () => { finished.current = true; setProfile({ name: name.trim() }); onClose(); };
+
+  /* Back button — don't lose a name that was just typed. */
+  useEffect(() => () => {
+    if (!finished.current && typed.current.trim() !== (p.name || "")) setProfile({ name: typed.current.trim() });
+  }, []);
 
   return (
     <div className="cover" style={{ zIndex: 24 }}>
       <div className="coverbar">
         <button className="navbtn" onClick={save} aria-label="Back to Settings">
-          <ChevronLeft size={22} strokeWidth={2.4} /><span className="navtext">Settings</span>
+          <ChevronLeft size={21} strokeWidth={2.6} style={{ marginRight: -1 }} /><span className="navtext">Settings</span>
         </button>
         <div style={{ flex: 1 }} />
         <button className="navbtn" onClick={save}><span className="navtext bold">Done</span></button>
       </div>
 
       <div className="coverbody">
-        <div className="profilehead">
+        <div className="profilebanner" style={{ background: `linear-gradient(158deg, ${skyNow().from}, ${skyNow().to})` }}>
           <button className="avatarwrap" onClick={() => pick.current?.click()} aria-label="Change profile photo">
-            <Avatar id={p.avatarId} name={name} size={104} />
+            <Avatar id={p.avatarId} name={name} size={96} />
             <span className="camerabadge"><Camera size={15} /></span>
           </button>
           <input ref={pick} type="file" accept="image/*" style={{ display: "none" }} onChange={choosePhoto} />
+          <h2 className="nm">{name.trim() || "Add your name"}</h2>
+          <p className="since">
+            {p.since
+              ? `Writing here since ${new Date(p.since).toLocaleDateString(undefined, { month: "long", year: "numeric" })}`
+              : "Your workspace, on this device"}
+          </p>
           {p.avatarId && (
-            <button className="removephoto" onClick={() => { dropAttachment(p.avatarId); setProfile({ avatarId: null }); }}>
+            <button className="removephoto" onClick={() => { dropAttachment(p.avatarId); setProfile({ avatarId: null }); toast("Photo removed"); }}>
               Remove photo
             </button>
           )}
@@ -1881,33 +1997,54 @@ function ProfilePage({ data, update, onClose, confirm, toast }) {
         <Group title="Your name" footer="NoteFlow greets you by your first name on the Today screen.">
           <div className="item">
             <input className="grow" value={name} onChange={(e) => setName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && save()} placeholder="What should we call you?" style={{ fontSize: 17 }} aria-label="Your name" />
+              onKeyDown={(e) => e.key === "Enter" && save()} placeholder="What should we call you?"
+              style={{ fontSize: 17 }} aria-label="Your name" />
             {name && <button onClick={() => setName("")} aria-label="Clear name"><X size={16} color="var(--label-3)" /></button>}
           </div>
         </Group>
 
         <div className="ghead">Your record</div>
-        <div className="list" style={{ padding: "16px 8px" }}>
-          <div className="figs" style={{ marginTop: 0, paddingTop: 0, borderTop: "none" }}>
-            <div className="fig"><b>{notes}</b><span>Notes</span></div>
-            <div className="fig"><b style={{ color: "var(--accent)" }}>{entries}</b><span>Entries</span></div>
-            <div className="fig"><b style={{ color: "var(--orange)" }}>{streakOf(data.journal)}</b><span>Streak</span></div>
-            <div className="fig"><b style={{ color: "var(--green)" }}>{done}</b><span>Done</span></div>
+        <div className="statgrid">
+          <div className="statcard">
+            <div className="sqico" style={{ background: "#BE7C17" }}><FileText size={15} /></div>
+            <b>{notes}</b><span>{notes === 1 ? "Note" : "Notes"} kept</span>
+          </div>
+          <div className="statcard">
+            <div className="sqico" style={{ background: "#96496F" }}><BookOpen size={15} /></div>
+            <b>{entries}</b><span>{entries === 1 ? "Journal entry" : "Journal entries"}</span>
+          </div>
+          <div className="statcard">
+            <div className="sqico" style={{ background: "var(--orange)" }}><Flame size={15} /></div>
+            <b>{streak}</b><span>{streak === 1 ? "Day streak" : "Day streak"}</span>
+          </div>
+          <div className="statcard">
+            <div className="sqico" style={{ background: "var(--green)" }}><CheckSquare size={15} /></div>
+            <b>{done}</b><span>Tasks completed</span>
           </div>
         </div>
-        {p.since && (
-          <p className="gfoot" style={{ textAlign: "center", paddingTop: 20 }}>
-            Writing in NoteFlow since {new Date(p.since).toLocaleDateString(undefined, { month: "long", year: "numeric" })}
-          </p>
-        )}
+
+        <div className="ghead">This week</div>
+        <Group footer="Everything here is counted on your device. Nothing leaves it.">
+          <div className="item">
+            <div className="grow"><div className="ttl">Words written</div><div className="sub">Across journal entries</div></div>
+            <span className="val">{weekWords.toLocaleString()}</span>
+          </div>
+          <div className="item">
+            <div className="grow"><div className="ttl">Notes added</div></div>
+            <span className="val">{weekNotes}</span>
+          </div>
+          <div className="item">
+            <div className="grow"><div className="ttl">Tasks finished</div></div>
+            <span className="val">{weekTasks}</span>
+          </div>
+        </Group>
       </div>
     </div>
   );
 }
 
-function SettingsPage({ data, update, voice, onClose, confirm, toast }) {
+function SettingsPage({ data, update, voice, onClose, confirm, toast, profileOpen, setProfileOpen }) {
   const done = data.tasks.filter((t) => t.done).length;
-  const [editingProfile, setEditingProfile] = useState(false);
   const p = profileOf(data);
   return (
     <div className="cover">
@@ -1917,7 +2054,7 @@ function SettingsPage({ data, update, voice, onClose, confirm, toast }) {
       </div>
       <div className="coverbody">
         <div className="list" style={{ marginBottom: 4 }}>
-          <button className="item" style={{ padding: "14px" }} onClick={() => setEditingProfile(true)}>
+          <button className="item" style={{ padding: "14px" }} onClick={() => setProfileOpen(true)}>
             <Avatar id={p.avatarId} name={p.name} size={54} />
             <div className="grow" style={{ marginLeft: 3 }}>
               <div className="ttl" style={{ fontSize: 18, fontWeight: 700, letterSpacing: "-.02em" }}>{p.name || "Add your name"}</div>
@@ -1976,7 +2113,12 @@ function SettingsPage({ data, update, voice, onClose, confirm, toast }) {
         <Group title="Data" footer="NoteFlow stores everything on this device. Nothing is uploaded.">
           <button className="item inset" onClick={() => confirm({
             title: "Restore Sample Content?", message: "Your current notes, tasks and entries will be replaced.", danger: "Restore",
-            onConfirm: () => { update((d) => ({ ...sample(), prefs: d.prefs })); onClose(); toast("Sample content restored"); },
+            onConfirm: () => {
+              data.notes.forEach((n) => dropAll(n.attachments));
+              Object.values(data.journal).forEach((e) => dropAll(e.attachments));
+              update((d) => ({ ...sample(), prefs: d.prefs }));
+              onClose(); toast("Sample content restored");
+            },
           })}>
             <div className="sqico" style={{ background: "var(--orange)" }}><RotateCcw size={15} /></div>
             <div className="grow"><div className="ttl">Restore Sample Content</div></div>
@@ -2000,8 +2142,8 @@ function SettingsPage({ data, update, voice, onClose, confirm, toast }) {
         <p className="gfoot" style={{ textAlign: "center", paddingTop: 28 }}>NoteFlow 1.0<br />Notes, journal and plans in one place.</p>
       </div>
 
-      {editingProfile && (
-        <ProfilePage data={data} update={update} confirm={confirm} toast={toast} onClose={() => setEditingProfile(false)} />
+      {profileOpen && (
+        <ProfilePage data={data} update={update} confirm={confirm} toast={toast} onClose={() => setProfileOpen(false)} />
       )}
     </div>
   );
@@ -2077,21 +2219,63 @@ const TABS = [
 ];
 
 export default function NoteFlow() {
-  const { data, update } = useStore();
+  const { data, update, saveFailed } = useStore();
   const voice = useVoice();
   const [tab, setTab] = useState("today");
   const [note, setNote] = useState(null);
   const [journal, setJournal] = useState(null);
   const [task, setTask] = useState(null);
   const [sheet, setSheet] = useState(null);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [alert, setAlert] = useState(null);
   const [toastMsg, setToastMsg] = useState(null);
   const [scrolled, setScrolled] = useState(false);
   const scroller = useRef(null);
-  const undoRef = useRef(null);
+  const [undo, setUndo] = useState(null);
   const timerRef = useRef(null);
 
   useEffect(() => { scroller.current?.scrollTo({ top: 0 }); setScrolled(false); voice.stop(); }, [tab]);
+
+  /* ── Hardware / browser back ──────────────────────────────────────
+     Every open layer adds one entry to session history, so Android's back
+     button peels them off one at a time instead of leaving the app. On the
+     Today screen with nothing open, back exits — which is what people expect. */
+  const layers =
+    (task ? 1 : 0) + (note ? 1 : 0) + (journal ? 1 : 0) +
+    (profileOpen ? 1 : 0) + (sheet ? 1 : 0) + (tab !== "today" ? 1 : 0);
+  const depth = useRef(0);
+  const skipPop = useRef(0);
+
+  const closeTop = useCallback(() => {
+    if (task) { setTask(null); return; }
+    if (note) { setNote(null); return; }
+    if (journal) { setJournal(null); return; }
+    if (profileOpen) { setProfileOpen(false); return; }
+    if (sheet) { setSheet(null); return; }
+    if (tab !== "today") setTab("today");
+  }, [task, note, journal, profileOpen, sheet, tab]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (layers > depth.current) {
+      for (let i = depth.current; i < layers; i++) window.history.pushState({ noteflow: i + 1 }, "");
+    } else if (layers < depth.current) {
+      /* closed from the UI, so drop the matching history entries quietly */
+      skipPop.current += 1;
+      window.history.go(layers - depth.current);
+    }
+    depth.current = layers;
+  }, [layers]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onPop = () => {
+      if (skipPop.current > 0) { skipPop.current -= 1; return; }
+      if (depth.current > 0) { depth.current -= 1; closeTop(); }
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [closeTop]);
 
   /* Long-press shortcuts on the home screen open straight into a new item. */
   const launched = useRef(false);
@@ -2107,13 +2291,18 @@ export default function NoteFlow() {
   }, [data]);
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
-  const toast = useCallback((message, undo) => {
+  const toast = useCallback((message, undoFn) => {
     clearTimeout(timerRef.current);
-    undoRef.current = undo || null;
+    setUndo(() => undoFn || null);
     setToastMsg(message);
-    timerRef.current = setTimeout(() => { setToastMsg(null); undoRef.current = null; }, undo ? 5200 : 2400);
+    timerRef.current = setTimeout(() => { setToastMsg(null); setUndo(null); }, undoFn ? 5200 : 2400);
   }, []);
   const confirm = useCallback((cfg) => setAlert(cfg), []);
+
+  /* Storage full or blocked — say so rather than losing work quietly. */
+  useEffect(() => {
+    if (saveFailed) toast("Couldn't save — device storage may be full");
+  }, [saveFailed, toast]);
 
   if (!data) {
     return <div className="nf"><style>{CSS}</style><div className="device"><div className="canvas" /></div></div>;
@@ -2215,8 +2404,9 @@ export default function NoteFlow() {
         </div>
 
         {sheet === "create" && <CreateSheet onClose={() => setSheet(null)} onNote={newNote} onTask={newTask} onJournal={() => openJournal(TODAY())} />}
-        {sheet === "search" && <SearchPage data={data} voice={voice} onClose={() => setSheet(null)} openNote={setNote} openJournal={openJournal} go={setTab} />}
-        {sheet === "settings" && <SettingsPage data={data} update={update} voice={voice} onClose={() => setSheet(null)} confirm={confirm} toast={toast} />}
+        {sheet === "search" && <SearchPage data={data} voice={voice} onClose={() => setSheet(null)} openNote={setNote} openJournal={openJournal} openTask={setTask} go={setTab} />}
+        {sheet === "settings" && <SettingsPage data={data} update={update} voice={voice} confirm={confirm} toast={toast}
+          profileOpen={profileOpen} setProfileOpen={setProfileOpen} onClose={() => { setProfileOpen(false); setSheet(null); }} />}
 
         {note && <NoteEditor key={note.id} note={data.notes.find((n) => n.id === note.id) || note} dark={dark} voice={voice}
           onSave={saveNote} onDelete={deleteNote} onClose={() => setNote(null)} toast={toast} confirm={confirm} />}
@@ -2228,7 +2418,7 @@ export default function NoteFlow() {
         {toastMsg && (
           <div className="toast">
             <span>{toastMsg}</span>
-            {undoRef.current && <button onClick={() => { undoRef.current?.(); undoRef.current = null; setToastMsg(null); }}>Undo</button>}
+            {undo && <button onClick={() => { undo(); setUndo(null); setToastMsg(null); clearTimeout(timerRef.current); }}>Undo</button>}
           </div>
         )}
 
