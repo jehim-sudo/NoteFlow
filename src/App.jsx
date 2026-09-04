@@ -88,7 +88,7 @@ const CSS = `
 .scroll::-webkit-scrollbar { width:0; }
 .pad { padding:0 18px; }
 .large { font-family:var(--display); font-size:33px; font-weight:800; letter-spacing:-.035em; padding:10px 18px 0; line-height:1.1; }
-.subhead { font-size:14.5px; color:var(--label-2); padding:0 18px; margin-top:5px; display:flex; align-items:center; gap:7px; }
+.subhead { font-size:14.5px; color:var(--label-2); padding:0 18px; margin-top:6px; display:flex; align-items:center; gap:8px; }
 .subhead .bead { width:6px; height:6px; border-radius:3px; background:var(--accent); }
 
 /* ---------- sky hero ---------- */
@@ -100,8 +100,8 @@ const CSS = `
   background:radial-gradient(closest-side, rgba(255,255,255,.30), rgba(255,255,255,0)); pointer-events:none;
 }
 .hero .hi { font-family:var(--display); font-size:32px; font-weight:800; letter-spacing:-.035em; line-height:1.12; }
-.hero .dt { font-size:14px; opacity:.86; margin-top:7px; letter-spacing:.01em; }
-.hero .row { display:flex; align-items:center; gap:18px; margin-top:22px; position:relative; }
+.hero .dt { font-size:14px; opacity:.88; margin-top:8px; letter-spacing:.01em; }
+.hero .row { display:flex; align-items:center; gap:18px; margin-top:24px; position:relative; }
 .hero .cap { font-size:14.5px; opacity:.94; line-height:1.45; }
 .hero .chips { display:flex; gap:8px; margin-top:11px; flex-wrap:wrap; }
 .hero .hchip {
@@ -117,24 +117,25 @@ const CSS = `
 /* ---------- grouped lists ---------- */
 .ghead {
   font-family:var(--display); font-size:14px; font-weight:700; letter-spacing:-.005em; color:var(--label);
-  padding:24px 18px 9px; display:flex; align-items:center; gap:8px;
+  padding:26px 18px 10px; display:flex; align-items:center; gap:9px;
 }
-.ghead::before { content:""; width:4px; height:15px; border-radius:2px; background:var(--accent); flex:none; }
+.ghead::before { content:""; width:3px; height:14px; border-radius:2px; background:var(--accent); flex:none; opacity:.9; }
 .ghead .r { margin-left:auto; font-family:var(--sf); font-weight:400; color:var(--label-3); font-size:13px; }
 .ghead .act { margin-left:auto; font-family:var(--sf); color:var(--accent); font-size:14px; font-weight:600; }
-.list { background:var(--card); border-radius:16px; margin:0 18px; overflow:hidden; box-shadow:0 1px 2px rgba(40,30,20,.05),0 6px 16px -8px rgba(40,30,20,.08); }
+.list { background:var(--card); border-radius:18px; margin:0 18px; overflow:hidden; box-shadow:0 1px 1px rgba(40,30,20,.04),0 8px 20px -14px rgba(40,30,20,.18); }
 .nf.dark .list { box-shadow:none; }
-.item { position:relative; display:flex; align-items:center; gap:12px; padding:12px 14px; width:100%; text-align:left; min-height:48px; }
+.item { position:relative; display:flex; align-items:center; gap:13px; padding:13px 15px; width:100%; text-align:left; min-height:50px; }
 .item:active { background:var(--fill-2); }
-.item + .item::before { content:""; position:absolute; top:0; left:14px; right:0; height:.5px; background:var(--sep); }
+.chip:active, .opt:active, .attbtn:active, .statcard:active { transform:scale(.98); }
+.item + .item::before { content:""; position:absolute; top:0; left:15px; right:0; height:.5px; background:var(--sep); }
 /* checkbox rows: 14 padding + 24 control + 12 gap */
-.item + .item.inset::before { left:50px; }
+.item + .item.inset::before { left:51px; }
 /* icon rows: 14 padding + 30 tile + 12 gap */
-.item + .item:has(.sqico)::before { left:56px; }
+.item + .item:has(.sqico)::before { left:58px; }
 .item .grow { flex:1; min-width:0; padding:0; }
 .ghead .act, .ghead .r { padding:0; }
-.item .ttl { font-size:16px; }
-.item .sub { font-size:13px; color:var(--label-2); margin-top:2px; }
+.item .ttl { font-size:16px; line-height:1.3; }
+.item .sub { font-size:13px; color:var(--label-2); margin-top:3px; line-height:1.35; }
 .item .val { font-size:15px; color:var(--label-2); margin-left:auto; text-align:right; }
 .chev { color:var(--label-4); flex:none; }
 .gfoot { font-size:12.5px; color:var(--label-2); padding:9px 20px 0; line-height:1.45; }
@@ -143,7 +144,7 @@ const CSS = `
 
 /* ---------- capture ---------- */
 .capture {
-  margin:16px 18px 0; background:var(--card); border-radius:16px; padding:11px 12px 11px 15px;
+  margin:16px 18px 0; background:var(--card); border-radius:18px; padding:12px 12px 12px 16px;
   display:flex; align-items:center; gap:10px; box-shadow:0 1px 2px rgba(40,30,20,.05),0 8px 20px -10px rgba(40,30,20,.14);
 }
 .nf.dark .capture { box-shadow:none; }
@@ -182,7 +183,7 @@ const CSS = `
 .ncard {
   border-radius:18px; padding:14px 14px 12px; text-align:left; display:flex; flex-direction:column; min-height:124px;
   transition:transform .18s cubic-bezier(.3,1.3,.5,1); overflow:hidden; position:relative;
-  box-shadow:0 1px 2px rgba(40,30,20,.06),0 10px 22px -12px rgba(40,30,20,.24);
+  box-shadow:0 1px 1px rgba(40,30,20,.05),0 10px 24px -14px rgba(40,30,20,.22);
 }
 .nf.dark .ncard { box-shadow:0 1px 0 rgba(255,255,255,.04); }
 .ncard::after { content:""; position:absolute; inset:0; border-radius:18px; background:linear-gradient(150deg,rgba(255,255,255,.5),rgba(255,255,255,0) 46%); pointer-events:none; }
@@ -205,7 +206,7 @@ const CSS = `
 @keyframes pop { from { opacity:0; transform:translateY(12px) scale(.97) } }
 
 /* ---------- controls ---------- */
-.searchfield { display:flex; align-items:center; gap:8px; background:var(--fill); border-radius:13px; padding:9px 11px; margin:10px 18px 0; }
+.searchfield { display:flex; align-items:center; gap:9px; background:var(--fill); border-radius:14px; padding:10px 12px; margin:10px 18px 0; }
 .searchfield input { font-size:16px; }
 .segmented { display:flex; gap:2px; background:var(--fill); border-radius:12px; padding:3px; margin:14px 18px 0; }
 .segmented button { flex:1; min-width:0; padding:7px 6px; border-radius:9px; font-size:13.5px; font-weight:500; color:var(--label); text-align:center; white-space:nowrap; transition:background .22s, color .22s; }
@@ -360,7 +361,7 @@ const CSS = `
   background:var(--bar); backdrop-filter:saturate(180%) blur(22px); -webkit-backdrop-filter:saturate(180%) blur(22px);
   box-shadow:0 -.5px 0 var(--sep);
 }
-.tabbtn { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--label-3); font-size:10px; font-weight:600; padding:2px; transition:color .2s; }
+.tabbtn { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--label-3); font-size:10.5px; font-weight:600; letter-spacing:.01em; padding:3px 2px; transition:color .2s; }
 .tabbtn.on { color:var(--accent); }
 .tabbtn.on svg { animation:hop .38s cubic-bezier(.3,1.5,.5,1); }
 @keyframes hop { 40% { transform:translateY(-4px) scale(1.08) } }
@@ -384,7 +385,7 @@ const CSS = `
 .titlein { font-family:var(--display); font-size:25px; font-weight:800; letter-spacing:-.035em; }
 .bodyin { font-size:17px; line-height:1.6; resize:none; min-height:190px; margin-top:12px; }
 
-.sheet { position:absolute; left:0; right:0; bottom:0; z-index:21; background:var(--bg); border-radius:20px 20px 0 0; max-height:90%; overflow-y:auto; animation:cover .38s cubic-bezier(.32,.72,0,1); }
+.sheet { position:absolute; left:0; right:0; bottom:0; z-index:21; background:var(--bg); border-radius:22px 22px 0 0; max-height:90%; overflow-y:auto; animation:cover .38s cubic-bezier(.32,.72,0,1); }
 .sheet::-webkit-scrollbar { width:0; }
 .grab { width:36px; height:5px; border-radius:3px; background:var(--label-4); margin:8px auto 0; }
 .sheetbar { display:flex; align-items:center; padding:12px 14px 4px; }
@@ -683,25 +684,105 @@ function useStore() {
 }
 
 /* ══════════════════════════════════════════════════════════════════ */
+/*  NATIVE BRIDGE                                                     */
+/* ══════════════════════════════════════════════════════════════════ */
+
+/* Reached through Capacitor's injected global rather than imports, so the same
+   file runs unchanged in a browser where none of these plugins exist. */
+const cap = () => (typeof window !== "undefined" ? window.Capacitor : null);
+const isNative = () => !!cap()?.isNativePlatform?.();
+const nativePlugin = (name) => cap()?.Plugins?.[name] || null;
+
+/* A short summary the Android home-screen widget reads out of shared storage. */
+async function publishWidget(data) {
+  const prefs = nativePlugin("Preferences");
+  if (!prefs) return;
+  const t = TODAY();
+  const todays = data.tasks.filter((x) => x.due === t);
+  try {
+    await prefs.set({
+      key: "noteflow_widget",
+      value: JSON.stringify({
+        openTasks: todays.filter((x) => !x.done).length,
+        doneTasks: todays.filter((x) => x.done).length,
+        streak: streakOf(data.journal),
+        notes: data.notes.filter((n) => !n.archived).length,
+        name: firstName(data),
+        updated: Date.now(),
+      }),
+    });
+  } catch (e) { /* widget is a nicety, never break the app for it */ }
+}
+
+/* ══════════════════════════════════════════════════════════════════ */
 /*  DICTATION                                                         */
 /* ══════════════════════════════════════════════════════════════════ */
 
 function useVoice() {
   const SR = typeof window !== "undefined" ? window.SpeechRecognition || window.webkitSpeechRecognition : null;
-  const supported = !!SR;
+  const native = nativePlugin("SpeechRecognition");
+  /* Android's WebView has no Web Speech API, so on device we drive the OS
+     recogniser through a plugin instead. Same interface either way. */
+  const supported = !!native || !!SR;
+
   const [field, setField] = useState(null);
   const [interim, setInterim] = useState("");
   const [problem, setProblem] = useState("");
-  const rec = useRef(null); const sink = useRef(null);
+  const rec = useRef(null);
+  const sink = useRef(null);
+  const sub = useRef(null);
+  const heard = useRef("");
 
   const stop = useCallback(() => {
-    const r = rec.current; rec.current = null;
-    if (r) { r.onend = null; r.onresult = null; try { r.stop(); } catch (e) { } }
+    if (native) {
+      const text = heard.current.trim();
+      heard.current = "";
+      try { native.stop(); } catch (e) { }
+      try { sub.current?.remove?.(); } catch (e) { }
+      sub.current = null;
+      if (text) sink.current?.(text);
+    } else {
+      const r = rec.current;
+      rec.current = null;
+      if (r) { r.onend = null; r.onresult = null; try { r.stop(); } catch (e) { } }
+    }
     setField(null); setInterim("");
-  }, []);
+  }, [native]);
 
-  const start = useCallback((id, onText) => {
-    if (!supported) { setProblem("Dictation needs Safari, Chrome or Edge."); return; }
+  const startNative = useCallback(async (id, onText) => {
+    try {
+      const avail = await native.available().catch(() => ({ available: true }));
+      if (avail && avail.available === false) { setProblem("Speech recognition isn't available on this device."); return; }
+
+      let perm = await native.checkPermissions().catch(() => null);
+      if (!perm || perm.speechRecognition !== "granted") {
+        perm = await native.requestPermissions().catch(() => null);
+      }
+      if (perm && perm.speechRecognition !== "granted") {
+        setProblem("Microphone access was denied. Allow it in Settings to dictate.");
+        return;
+      }
+
+      sink.current = onText;
+      heard.current = "";
+      setProblem(""); setField(id); tap();
+
+      sub.current = await native.addListener("partialResults", (d) => {
+        const m = d?.matches?.[0];
+        if (m) { heard.current = m; setInterim(m); }
+      });
+
+      await native.start({
+        language: (typeof navigator !== "undefined" && navigator.language) || "en-US",
+        maxResults: 1, partialResults: true, popup: false,
+      });
+    } catch (e) {
+      setProblem("Dictation couldn't start. Check microphone permission in Settings.");
+      setField(null); setInterim("");
+    }
+  }, [native]);
+
+  const startWeb = useCallback((id, onText) => {
     if (rec.current) { const r = rec.current; rec.current = null; r.onend = null; try { r.stop(); } catch (e) { } }
     setProblem(""); tap();
     const r = new SR();
@@ -718,17 +799,22 @@ function useVoice() {
     };
     r.onerror = (ev) => {
       setProblem(ev.error === "not-allowed" || ev.error === "service-not-allowed"
-        ? "Microphone access is off. Turn it on in your browser settings to dictate."
+        ? "Microphone access is off. Turn it on in your browser to dictate."
         : ev.error === "no-speech" ? "Didn't catch that — tap the mic and try again." : "Dictation stopped unexpectedly.");
       rec.current = null; setField(null); setInterim("");
     };
     r.onend = () => { if (rec.current === r) { rec.current = null; setField(null); setInterim(""); } };
     sink.current = onText; rec.current = r; setField(id);
     try { r.start(); } catch (e) { setProblem("Dictation couldn't start here."); setField(null); }
-  }, [SR, supported]);
+  }, [SR]);
+
+  const start = useCallback((id, onText) => {
+    if (!supported) { setProblem("Dictation isn't available on this device."); return; }
+    if (native) startNative(id, onText); else startWeb(id, onText);
+  }, [supported, native, startNative, startWeb]);
 
   const toggle = useCallback((id, onText) => { field === id ? stop() : start(id, onText); }, [field, start, stop]);
-  useEffect(() => () => { try { rec.current?.stop(); } catch (e) { } }, []);
+  useEffect(() => () => { try { stop(); } catch (e) { } }, []);
   return { supported, field, interim, problem, toggle, stop };
 }
 
@@ -2276,6 +2362,42 @@ export default function NoteFlow() {
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, [closeTop]);
+
+  /* On Android, the back gesture and the back button both come through Capacitor
+     rather than the WebView's history, so handle them explicitly. Without this
+     a swipe from the edge closes the whole app instead of the open screen. */
+  const layersRef = useRef(layers);
+  layersRef.current = layers;
+  useEffect(() => {
+    const app = nativePlugin("App");
+    if (!app) return;
+    let handle;
+    app.addListener("backButton", () => {
+      if (layersRef.current > 0) closeTop();
+      else app.exitApp?.();
+    }).then((h) => { handle = h; }).catch(() => { });
+    return () => { try { handle?.remove?.(); } catch (e) { } };
+  }, [closeTop]);
+
+  /* Widget shortcuts and the launcher's long-press menu arrive as noteflow:// links. */
+  useEffect(() => {
+    const app = nativePlugin("App");
+    if (!app || !data) return;
+    const route = (url) => {
+      if (!url) return;
+      const what = String(url).split("/").pop();
+      if (what === "note") { setTab("notes"); newNote(); }
+      else if (what === "journal") { setTab("journal"); openJournal(TODAY()); }
+      else if (what === "task") { setTab("planner"); newTask(); }
+    };
+    let handle;
+    app.getLaunchUrl?.().then((r) => route(r?.url)).catch(() => { });
+    app.addListener("appUrlOpen", (e) => route(e?.url)).then((h) => { handle = h; }).catch(() => { });
+    return () => { try { handle?.remove?.(); } catch (e) { } };
+  }, [data]);
+
+  /* Keep the home-screen widget's figures current. */
+  useEffect(() => { if (data) publishWidget(data); }, [data]);
 
   /* Long-press shortcuts on the home screen open straight into a new item. */
   const launched = useRef(false);

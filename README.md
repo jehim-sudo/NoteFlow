@@ -176,6 +176,31 @@ total. That is fine for a few dozen photos. If you want the app to hold hundreds
 swap the shim in `src/main.jsx` for IndexedDB (via [`idb-keyval`](https://github.com/jakearchibald/idb-keyval),
 about ten lines) — the storage contract is identical and no app code changes.
 
+### Native features on Android
+
+`scripts/android-extras.mjs` runs after every `cap sync` (the npm scripts and the
+CI workflow both call it). Capacitor regenerates `android/` from scratch, so
+anything native has to be re-applied each time — that script is the single place
+it lives. It adds:
+
+- **Permissions** — microphone, audio settings and camera, plus the `<queries>`
+  block Android 11+ needs before an app may talk to the speech service.
+- **`noteflow://` deep links**, so the widget and launcher shortcuts can open
+  straight into a new note, entry or task.
+- **Long-press shortcuts** on the app icon: Note, Journal, Task.
+- **A home-screen widget** — greeting, today's progress, streak, and three
+  buttons. It reads a summary the web app writes through Capacitor Preferences,
+  so no live bridge is needed. Android refreshes it every 30 minutes and whenever
+  it is resized or re-added.
+
+### Why dictation needs a plugin
+
+The Web Speech API exists in Chrome but **not in the Android System WebView**,
+which is what a Capacitor app runs inside. `useVoice()` therefore prefers
+`@capacitor-community/speech-recognition` when running natively and falls back to
+the browser API on the web. Both paths feed the same `sink.current(text)`
+callback, so the rest of the app is unaware of which engine is in use.
+
 ### Changing the typeface
 
 Headings, titles and the journal page use **Plus Jakarta Sans**, self-hosted via

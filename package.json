@@ -6,10 +6,11 @@
   "scripts": {
     "android:add": "npx cap add android",
     "android:apk": "npm run android:sync && cd android && ./gradlew assembleDebug",
-    "android:bundle": "npm run build && npx cap sync android && cd android && ./gradlew bundleRelease",
+    "android:bundle": "npm run android:sync && cd android && ./gradlew bundleRelease",
+    "android:extras": "node scripts/android-extras.mjs",
     "android:open": "npm run android:sync && npx cap open android",
-    "android:release": "npm run build && npx cap sync android && cd android && ./gradlew assembleRelease",
-    "android:sync": "npm run build && npx cap sync android",
+    "android:release": "npm run android:sync && cd android && ./gradlew assembleRelease",
+    "android:sync": "npm run build && npx cap sync android && npm run android:extras",
     "build": "vite build",
     "dev": "vite",
     "ios:add": "npx cap add ios",
@@ -18,10 +19,13 @@
     "preview": "vite preview --host"
   },
   "dependencies": {
+    "@capacitor-community/speech-recognition": "^6.0.1",
+    "@capacitor/app": "^6.0.1",
+    "@capacitor/preferences": "^6.0.2",
+    "@fontsource/plus-jakarta-sans": "^5.0.20",
     "lucide-react": "^0.383.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "@fontsource/plus-jakarta-sans": "^5.0.20"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@capacitor/android": "^6.1.2",
